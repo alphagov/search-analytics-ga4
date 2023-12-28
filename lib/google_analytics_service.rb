@@ -1,6 +1,6 @@
-require_relative 'google_analytics/client'
-require_relative 'google_analytics/request'
-require_relative 'google_analytics/response'
+require_relative '../google_analytics/client'
+require_relative '../google_analytics/request'
+require_relative '../google_analytics/response'
 
 class GoogleAnalyticsService
   attr_accessor :ga_client, :all_data
@@ -23,7 +23,7 @@ class GoogleAnalyticsService
     offset = 0
     limit = 10
 
-    while true
+    while true do
       data = get_data(offset, limit)
       break if data[:rows].empty?
 
