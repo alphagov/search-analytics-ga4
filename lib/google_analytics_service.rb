@@ -51,6 +51,3 @@ class GoogleAnalyticsService
     response.to_h
   end
 end
-
-google_analytics_service = GoogleAnalyticsService.new
-google_analytics_service.get_paginated_data.first.path
