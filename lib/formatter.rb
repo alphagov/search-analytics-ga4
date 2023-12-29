@@ -18,17 +18,17 @@ class Formatter
   def normalise_data
     ga_data.each do |page_data|
       path = page_data.path
+      path = replace_empty_string_with_slash(path)
       if starts_with_slash_and_is_not_a_smart_answer(path)
         path = remove_query_string(path)
         path = strip_out_trailing_slash(path)
-        path = replace_empty_string_with_slash(path)
 
         unless page_not_found(page_data)
           base_path = @consolidated_page_views[path]
           if base_path.nil?
-            @consolidated_page_views[path] = page_data.page_views.to_i
+            @consolidated_page_views[path] = page_data.page_views
           else
-            @consolidated_page_views[path] += page_data.page_views.to_i
+            @consolidated_page_views[path] += page_data.page_views
           end
         end
       end
@@ -52,6 +52,7 @@ class Formatter
   end
 
   def strip_out_trailing_slash(path)
+    return path if path == "/"
     path.chomp('/')
   end
 
