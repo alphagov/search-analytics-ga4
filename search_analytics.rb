@@ -1,5 +1,7 @@
 require_relative './lib/google_analytics_service'
 require_relative './lib/formatter'
+require_relative './lib/relevancy_calculator'
+
 
 class SearchAnalytics
   def self.run
@@ -8,7 +10,8 @@ class SearchAnalytics
     paginated_data = google_analytics_service.get_paginated_data
     consolidated_page_views = Formatter.new(paginated_data).normalise_data
 
-    pp consolidated_page_views
+    relevancy_calculator = RelevancyCalculator.new(consolidated_page_views)
+    puts relevancy_calculator.relevance
   end
 end
 
