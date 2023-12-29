@@ -21,7 +21,7 @@ class GoogleAnalyticsService
       data = get_data(offset, limit)
       break if data[:rows].empty?
 
-      all_data << data[:rows]
+      all_data << format_all_data(data[:rows])
 
       #Setting to 10 for now, will need to be 100k in prod
       offset += 10
@@ -31,22 +31,17 @@ class GoogleAnalyticsService
     all_data.flatten!
   end
 
-  def format_all_data
-    all_data.map do |row|
+  private
 
+  def format_all_data(data)
+    data.map do |row|
       path = row[:dimension_values].first[:value]
       title = row[:dimension_values].last[:value]
       page_views = row[:metric_values].first[:value]
 
-      PageData.new(
-        path,
-        title,
-        page_views
-      )
+      PageData.new(path, title, page_views)
     end
   end
-
-  private
 
   def get_data(offset, limit)
     request = Request.new(offset, limit)
@@ -58,6 +53,4 @@ class GoogleAnalyticsService
 end
 
 google_analytics_service = GoogleAnalyticsService.new
-google_analytics_service.get_paginated_data
-
-puts google_analytics_service.format_all_data.first.path
+google_analytics_service.get_paginated_data.first.path
