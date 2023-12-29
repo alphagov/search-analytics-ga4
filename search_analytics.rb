@@ -3,7 +3,6 @@ require_relative './lib/formatter'
 require_relative './lib/relevancy_calculator'
 require_relative './lib/page_traffic_writer'
 
-
 class SearchAnalytics
   def self.run
     google_analytics_service = GoogleAnalyticsService.new
