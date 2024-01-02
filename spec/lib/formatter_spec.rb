@@ -1,15 +1,13 @@
 require 'spec_helper'
 require_relative '../../lib/formatter'
 require_relative '../../lib/page_data'
-require 'pry'
-
 
 describe Formatter do
-  describe "#normalise_data" do
+  describe "#consolidated_page_views" do
     it "doesn't have a slash" do
       page_data = [PageData.new("other", "other", "50")]
       formatter = Formatter.new(page_data)
-      normalised_data = formatter.normalise_data
+      normalised_data = formatter.consolidated_page_views
 
       expect(normalised_data).to be_empty
     end
@@ -17,7 +15,7 @@ describe Formatter do
     it "strips out the trailing slash" do
       page_data = [PageData.new("/example/", "example", "50")]
       formatter = Formatter.new(page_data)
-      normalised_data = formatter.normalise_data
+      normalised_data = formatter.consolidated_page_views
 
       expect(normalised_data).to eq({"/example"=>50})
     end
@@ -25,7 +23,7 @@ describe Formatter do
     it "converts an empty string to a slash" do
       page_data = [PageData.new("", "example", "50")]
       formatter = Formatter.new(page_data)
-      normalised_data = formatter.normalise_data
+      normalised_data = formatter.consolidated_page_views
 
       expect(normalised_data).to eq({"/"=>50})
     end
@@ -33,7 +31,7 @@ describe Formatter do
     it "is a smart answer" do
       page_data = [PageData.new("/other/y/other", "smart answer", "10")]
       formatter = Formatter.new(page_data)
-      normalised_data = formatter.normalise_data
+      normalised_data = formatter.consolidated_page_views
 
       expect(normalised_data).to be_empty
     end
@@ -41,7 +39,7 @@ describe Formatter do
     it "starts with a '/' and it is not a smart answer" do
       page_data = [PageData.new("/example", "not a smart answer", "20")]
       formatter = Formatter.new(page_data)
-      normalised_data = formatter.normalise_data
+      normalised_data = formatter.consolidated_page_views
 
       expect(normalised_data).to eq({"/example"=>20})
     end
@@ -52,7 +50,7 @@ describe Formatter do
         PageData.new("/example", "not a smart answer", "30")
       ]
       formatter = Formatter.new(page_data)
-      normalised_data = formatter.normalise_data
+      normalised_data = formatter.consolidated_page_views
 
       expect(normalised_data).to eq({"/example"=>50})
     end
@@ -63,7 +61,7 @@ describe Formatter do
         PageData.new("/example?something=something", "not a smart answer", "30")
       ]
       formatter = Formatter.new(page_data)
-      normalised_data = formatter.normalise_data
+      normalised_data = formatter.consolidated_page_views
 
       expect(normalised_data).to eq({"/example"=>50})
     end
@@ -74,7 +72,7 @@ describe Formatter do
         PageData.new("/example", "not a smart answer", "20")
       ]
       formatter = Formatter.new(page_data)
-      normalised_data = formatter.normalise_data
+      normalised_data = formatter.consolidated_page_views
 
       expect(normalised_data).to eq({"/example"=>20})
     end
@@ -88,7 +86,7 @@ describe Formatter do
         PageData.new("/example2?something=something", "not a smart answer", "30")
       ]
       formatter = Formatter.new(page_data)
-      normalised_data = formatter.normalise_data
+      normalised_data = formatter.consolidated_page_views
 
       expect(normalised_data).to eq({"/example"=>40, "/other"=>20, "/example2"=>40})
     end
@@ -96,7 +94,7 @@ describe Formatter do
     it "removes data with the title and path of (other)" do
       page_data = [PageData.new("(other)", "(other)", "50")]
       formatter = Formatter.new(page_data)
-      normalised_data = formatter.normalise_data
+      normalised_data = formatter.consolidated_page_views
 
       expect(normalised_data).to be_empty
     end

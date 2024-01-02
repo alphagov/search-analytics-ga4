@@ -17,11 +17,7 @@ class RelevancyCalculator
         }
       }
       rank = {
-<<<<<<< HEAD
         path_components: [base_path],
-=======
-        path_components: base_path,
->>>>>>> da6c3e4 (Calculate relevancy scores and present as JSON)
         rank_1: idx,
         vc_1: page_views,
         vf_1: data.last.to_f  / total_page_views.to_f
