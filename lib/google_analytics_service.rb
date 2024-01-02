@@ -17,7 +17,7 @@ class GoogleAnalyticsService
     offset = 0
     limit = 10
 
-    3.times do
+    loop do
       data = get_data(offset, limit)
       break if data[:rows].empty?
 
