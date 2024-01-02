@@ -1,6 +1,7 @@
 require_relative './lib/google_analytics_service'
 require_relative './lib/formatter'
 require_relative './lib/relevancy_calculator'
+require_relative './lib/page_traffic_writer'
 
 
 class SearchAnalytics
@@ -11,7 +12,8 @@ class SearchAnalytics
     consolidated_page_views = Formatter.new(paginated_data).normalise_data
 
     relevancy_calculator = RelevancyCalculator.new(consolidated_page_views)
-    puts relevancy_calculator.relevance
+    page_traffic_writer = PageTrafficWriter.new(relevancy_calculator.relevance)
+    page_traffic_writer.export
   end
 end
 
