@@ -7,6 +7,11 @@ require 'pry'
 class GoogleAnalyticsService
   attr_accessor :ga_client, :all_data
 
+  OFFSET = 0
+  LIMIT = 10
+  OFFSET_INCREMENT = 10
+  LIMIT_INCREMENT = 10
+
   def initialize
     @ga_client = Client.new
     @all_data = []
@@ -14,8 +19,8 @@ class GoogleAnalyticsService
 
   def get_paginated_data
     #https://developers.google.com/analytics/devguides/reporting/data/v1/basics#navigate_long_reports
-    offset = 0
-    limit = 10
+    offset = OFFSET
+    limit = LIMIT
 
     loop do
       data = get_data(offset, limit)
@@ -24,8 +29,8 @@ class GoogleAnalyticsService
       all_data << format_all_data(data[:rows])
 
       #Setting to 10 for now, will need to be 100k in prod
-      offset += 10
-      limit += 10
+      offset += OFFSET_INCREMENT
+      limit += LIMIT_INCREMENT
     end
 
     all_data.flatten!
