@@ -6,7 +6,7 @@
 
 - [ ] Compare the data for 1 day's worth of data outputted from this repo vs the Search Analytics Python repo.
 
-- [ ] Add tests for the google_analytics directory.
+- [x] Add tests for the google_analytics directory.
 
 - [ ] Generate GA4 credentials and ask a PA to add the service account email address to the Google Analytics console. Check if we need different creds per environment. Currently we are using creds from the GOV.UK display screen.
 
