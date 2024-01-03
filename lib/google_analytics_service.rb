@@ -7,10 +7,10 @@ require 'pry'
 class GoogleAnalyticsService
   attr_accessor :ga_client, :all_data
 
+  #LIMIT and OFFSET_INCREMENT will be set to 100k in prod
   OFFSET = 0
   LIMIT = 10
   OFFSET_INCREMENT = 10
-  LIMIT_INCREMENT = 10
 
   def initialize
     @ga_client = Client.new
@@ -20,17 +20,14 @@ class GoogleAnalyticsService
   def get_paginated_data
     #https://developers.google.com/analytics/devguides/reporting/data/v1/basics#navigate_long_reports
     offset = OFFSET
-    limit = LIMIT
 
     loop do
-      data = get_data(offset, limit)
+      data = get_data(offset)
       break if data[:rows].empty?
 
       all_data << format_all_data(data[:rows])
 
-      #Setting to 10 for now, will need to be 100k in prod
       offset += OFFSET_INCREMENT
-      limit += LIMIT_INCREMENT
     end
 
     all_data.flatten!
@@ -48,8 +45,8 @@ class GoogleAnalyticsService
     end
   end
 
-  def get_data(offset, limit)
-    request = Request.new(offset, limit)
+  def get_data(offset)
+    request = Request.new(offset, LIMIT)
     ga_response = ga_client.client.run_report(request.analytics_data)
     response = Response.new(ga_response)
 

@@ -102,7 +102,7 @@ describe GoogleAnalyticsService do
         .to receive(:new)
         .with(
           GoogleAnalyticsService::OFFSET + GoogleAnalyticsService::OFFSET_INCREMENT,
-          GoogleAnalyticsService::LIMIT + GoogleAnalyticsService::LIMIT_INCREMENT
+          GoogleAnalyticsService::LIMIT
         ).and_return(
           double(
             'request',
