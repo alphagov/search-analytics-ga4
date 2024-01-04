@@ -5,7 +5,7 @@ class PageTrafficWriter
   end
 
   def export
-    File.open("page-traffic.dump", "w+") do |file|
+    File.open("page-traffic-test.dump", "w+") do |file|
       ranked_page_traffic.each { |element| file.puts(element) }
     end
   end
