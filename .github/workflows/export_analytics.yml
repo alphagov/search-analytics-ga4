@@ -1,0 +1,35 @@
+name: "Export analytics"
+#Setting to on push for testing purposes.
+on: push
+  # schedule:
+  #   - cron:  '5 4 * * *'
+  # workflow_dispatch: {}
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  export-analytics:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ruby/setup-ruby@ec02537da5712d66d4d50a0f33b7eb52773b5ed1
+    - run: bundle install
+    - run: ruby search_analytics.rb
+      env:
+        GOOGLE_ACCOUNT_TYPE: ${{ secrets.GOOGLE_ACCOUNT_TYPE }}
+        PROJECT_ID: ${{ secrets.PROJECT_ID }}
+        GOOGLE_PRIVATE_KEY_ID: ${{ secrets.GOOGLE_PRIVATE_KEY_ID }}
+        GOOGLE_PRIVATE_KEY: ${{ secrets.GOOGLE_PRIVATE_KEY }}
+        GOOGLE_CLIENT_EMAIL: ${{ secrets.GOOGLE_CLIENT_EMAIL }}
+        GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+        GOOGLE_AUTH_URI: ${{ secrets.GOOGLE_AUTH_URI }}
+        GOOGLE_TOKEN_URI: ${{ secrets.GOOGLE_TOKEN_URI }}
+        GOOGLE_AUTH_PROVIDER_X509_CERT_URL: ${{ secrets.GOOGLE_AUTH_PROVIDER_X509_CERT_URL }}
+        GOOGLE_CLIENT_X509_CERT_URL: ${{ secrets.GOOGLE_CLIENT_X509_CERT_URL }}
+    - uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: arn:aws:iam::172025368201:role/search_analytics_github_action_role
+        aws-region: eu-west-1
+    - run: aws s3 cp page-traffic-test.dump s3://govuk-search-analytics-production/ruby-search-analytics-test.dump
