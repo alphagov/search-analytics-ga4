@@ -6,31 +6,35 @@ class RelevancyCalculator
   end
 
   def relevance
-    formatted = []
-    consolidated_data.each.with_index(1) do |data, idx|
-      base_path = data.first
-      page_views = data.last
-       elastic_search_index =  {
-        index: {
-          _type: "page-traffic",
-          _id: base_path
-        }
-      }
-      rank = {
-        path_components: [base_path],
-        rank_1: idx,
-        vc_1: page_views,
-        vf_1: data.last.to_f  / total_page_views.to_f
-      }
-      formatted << elastic_search_index.to_json
-      formatted << rank.to_json
-    end
-    formatted
+    consolidated_data.map.with_index(1) do |(base_path, page_views), index|
+      [
+        elastic_search_index(base_path).to_json,
+        elastic_search_rank(base_path, index, page_views).to_json
+      ]
+    end.flatten
   end
 
   private
 
   attr_reader :consolidated_data
+
+  def elastic_search_index(base_path)
+    {
+      index: {
+        _type: 'page-traffic',
+        _id: base_path
+      }
+    }
+  end
+
+  def elastic_search_rank(base_path, index, page_views)
+    {
+      path_components: [base_path],
+      rank_1: index,
+      vc_1: page_views,
+      vf_1: page_views / total_page_views.to_f
+    }
+  end
 
   def total_page_views
     all_page_views = consolidated_data.values
