@@ -9,8 +9,8 @@ class GoogleAnalyticsService
 
   #LIMIT and OFFSET_INCREMENT will be set to 100k in prod
   OFFSET = 0
-  LIMIT = 10
-  OFFSET_INCREMENT = 10
+  LIMIT = 10_000
+  OFFSET_INCREMENT = 10_000
 
   def initialize
     @ga_client = Client.new
