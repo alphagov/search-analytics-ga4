@@ -98,5 +98,19 @@ describe Formatter do
 
       expect(normalised_data).to be_empty
     end
+
+    it 'sorts the formatted data by page views (descending)' do
+      page_data = [
+        PageData.new("/example", "example", "20"),
+        PageData.new("/example-two", "example-two", "10"),
+        PageData.new("/example-three", "example-three", "30"),
+        PageData.new("/example-four", "example-four", "5")
+      ]
+
+      formatter = Formatter.new(page_data)
+
+      #Converts consolidated_page_views to an array for the test as RSpec eq doesn't match based on hash order
+      expect(formatter.consolidated_page_views.to_a).to eq([["/example-three", 30], ["/example", 20], ["/example-two", 10], ["/example-four", 5]])
+    end
   end
 end

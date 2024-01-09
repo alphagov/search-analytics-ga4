@@ -10,7 +10,7 @@ class Formatter
 
   def consolidated_page_views
     normalise_data
-    @consolidated_page_views
+    sort_by_page_views_descending
   end
 
   private
@@ -61,5 +61,10 @@ class Formatter
 
   def page_not_found(page_data)
     page_data.title.include?(PAGE_NOT_FOUND)
+  end
+
+  def sort_by_page_views_descending
+    sorted_by_page_views_desc = @consolidated_page_views.sort_by {|_key, value| value}.reverse!
+    sorted_by_page_views_desc.to_h
   end
 end
